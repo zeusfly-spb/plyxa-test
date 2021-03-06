@@ -11,6 +11,13 @@ try {
 }
 regions = regions.map(item => ({value: item, attempts: 0}))
 
+let currency
+try {
+    currency = JSON.parse(fs.readFileSync('./regions.json'))
+} catch (e) {
+    throw new Error(`Ошибка чтения списка валют: ${e}`)
+}
+
 const sub = +process.argv[2]
 if (!sub) {
     throw new Error('Ошибка! Не указан или неверный тип SubId')
