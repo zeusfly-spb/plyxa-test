@@ -10,7 +10,8 @@ module.exports = {
       },
       subId: {
         type: Sequelize.BIGINT(11),
-        defaultValue: 0
+        defaultValue: 0,
+        unique: 'compositeIndex'
       },
       subType: {
         type: Sequelize.STRING(10),
@@ -18,13 +19,15 @@ module.exports = {
         defaultValue: 'sub'
       },
       currencyId: {
-        type: Sequelize.BIGINT(11)
+        type: Sequelize.BIGINT(11),
+        unique: 'compositeIndex'
       },
       countryCode: {
-        type: Sequelize.STRING(2)
+        type: Sequelize.STRING(2),
+        unique: 'compositeIndex'
       },
       price: Sequelize.FLOAT,
-      priceUsed: Sequelize.FLOAT,
+      priceUsd: Sequelize.FLOAT,
       priceInitial: {
         type: Sequelize.FLOAT,
         allowNull: false,
@@ -37,9 +40,10 @@ module.exports = {
       },
       addedDate: {
         allowNull: false,
-        type: Sequelize.DATE(6)
+        type: Sequelize.DATE
       }
-    });
+    })
+      .then(() => queryInterface.addIndex('SteamGiftsPrices', ['subId', 'currencyId', 'countryCode']))
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('SteamGiftsPrices');

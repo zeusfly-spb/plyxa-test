@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+const moment = require('moment')
 const {
   Model
 } = require('sequelize');
@@ -12,18 +13,60 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
+    static async create (values, options) {
+      try {
+        return Promise.resolve(await super.create({
+          ...values,
+          addedDate: moment().format('YYYY-MM-DD HH:mm:ss')
+        }, options))
+      } catch (e) {
+        return Promise.reject(new Error(`Create SteamGiftsPrice error: ${e}`))
+      }
+    }
+  }
+
   SteamGiftsPrice.init({
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    subType: DataTypes.STRING
+    subId: {
+      type: DataTypes.BIGINT(11),
+      defaultValue: 0
+    },
+    subType: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      defaultValue: 'sub'
+    },
+    currencyId: {
+      type: DataTypes.BIGINT(11)
+    },
+    countryCode: {
+      type: DataTypes.STRING(2)
+    },
+    price: DataTypes.FLOAT,
+    priceUsd: DataTypes.FLOAT,
+    priceInitial: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0
+    },
+    priceInitialUsd: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0
+    },
+    addedDate: {
+      allowNull: false,
+      type: DataTypes.DATE
+    }
   }, {
     sequelize,
     modelName: 'SteamGiftsPrice',
+    timestamps: false
   });
-  return SteamGiftsPrice;
-};
+  return SteamGiftsPrice
+}
