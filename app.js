@@ -1,5 +1,6 @@
 const ArgumentValidator = require('argument-validator')
 const fs = require('fs')
+const fetch = require('node-fetch')
 
 let regions
 try {
@@ -13,4 +14,9 @@ if (!ArgumentValidator.isNumber(sub)) {
     throw new Error('Ошибка! Не указан иди неверный тип SubId')
 }
 
-console.log(`Sub is: ${sub}`)
+regions.forEach(region => {
+    console.log(region)
+})
+fetch('https://store.steampowered.com/api/packagedetails?packageids=307391&cc=UK')
+    .then(res => res.json())
+    .then(json => result = json)
