@@ -1,6 +1,7 @@
-const ArgumentValidator = require('argument-validator')
 const fs = require('fs')
 const fetch = require('node-fetch')
+
+const maxAttempts = 3
 
 let regions
 try {
@@ -8,15 +9,31 @@ try {
 } catch (e) {
     throw new Error(`Ошибка чтения списка регионов: ${e}`)
 }
+regions = regions.map(item => ({value: item, attempts: 0}))
 
 const sub = +process.argv[2]
-if (!ArgumentValidator.isNumber(sub)) {
-    throw new Error('Ошибка! Не указан иди неверный тип SubId')
+if (!sub) {
+    throw new Error('Ошибка! Не указан или неверный тип SubId')
+}
+
+const getData = region => {
+    if (region.attempts >= maxAttempts) {
+        return
+    }
+    fetch(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=${region.value}`)
+        .then(res => res.json())
+        .then(json => storeData(json[sub]))
+        .catch(() => {
+            region.attempts++
+            getData(region)
+        })
+}
+
+const storeData = (data) => {
+    console.log(data)
 }
 
 regions.forEach(region => {
-    console.log(region)
+    getData(region)
 })
-fetch('https://store.steampowered.com/api/packagedetails?packageids=307391&cc=UK')
-    .then(res => res.json())
-    .then(json => result = json)
+
