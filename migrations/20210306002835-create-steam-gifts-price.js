@@ -26,15 +26,15 @@ module.exports = {
         type: Sequelize.STRING(2),
         unique: 'compositeIndex'
       },
-      price: Sequelize.FLOAT,
-      priceUsd: Sequelize.FLOAT,
+      price: Sequelize.FLOAT(11, 2),
+      priceUsd: Sequelize.FLOAT(11, 2),
       priceInitial: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.FLOAT(11, 2),
         allowNull: false,
         defaultValue: 0
       },
       priceInitialUsd: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.FLOAT(11, 2),
         allowNull: false,
         defaultValue: 0
       },

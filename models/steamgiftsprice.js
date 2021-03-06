@@ -47,15 +47,15 @@ module.exports = (sequelize, DataTypes) => {
     countryCode: {
       type: DataTypes.STRING(2)
     },
-    price: DataTypes.FLOAT,
-    priceUsd: DataTypes.FLOAT,
+    price: DataTypes.FLOAT(11, 2),
+    priceUsd: DataTypes.FLOAT(11, 2),
     priceInitial: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.FLOAT(11, 2),
       allowNull: false,
       defaultValue: 0
     },
     priceInitialUsd: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.FLOAT(11, 2),
       allowNull: false,
       defaultValue: 0
     },
