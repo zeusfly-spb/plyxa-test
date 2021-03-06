@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "plyxa",
+    "password": "plyxa",
+    "database": "plyxa",
+    "host": "mysql",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "plyxa",
+    "password": "plyxa",
+    "database": "plyxa",
+    "host": "mysql",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "plyxa",
+    "password": "plyxa",
+    "database": "plyxa",
+    "host": "mysql",
+    "dialect": "mysql"
+  }
+}
