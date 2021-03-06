@@ -58,6 +58,9 @@ const getData = region => {
 }
 
 const convertToUsd = (val, currCode) => {
+    if (currCode === 'USD') {
+        return val
+    }
     const rateIndex = `${currCode}USD`
     const rate = +currencyRates[rateIndex] || 0
     return val * rate
@@ -71,9 +74,9 @@ const storeData = (str, code) => {
             countryCode: code,
             currencyId: currencyId(params.price.currency),
             price: params.price.final,
-            priceUsd: code === 'US' ? params.price.final : convertToUsd(params.price.final, params.price.currency),
+            priceUsd: convertToUsd(params.price.final, params.price.currency),
             priceInitial: params.price.initial,
-            priceInitialUsd: code === 'US' ? params.price.initial : convertToUsd(params.price.initial, params.price.currency)
+            priceInitialUsd: convertToUsd(params.price.initial, params.price.currency)
         })
     } catch (e) {
         throw new Error(`Ошибка записи данных: ${e}`)
