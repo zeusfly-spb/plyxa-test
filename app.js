@@ -45,16 +45,45 @@ const getCurrencyRates = async () => {
     }
 }
 
+const getEuData = () => {
+    const selectMax = (fr, be, de) => {
+        let frParams = JSON.parse(fr)[sub].data
+        let beParams = JSON.parse(be)[sub].data
+        let deParams = JSON.parse(de)[sub].data
+        frParams = {...frParams, str: fr}
+        beParams = {...beParams, str: be}
+        deParams = {...deParams, str: de}
+        let euroParams = [frParams, beParams, deParams]
+        euroParams.sort((a, b) => a.price.initial > b.price.initial ? -1 : a.price.initial > b.price.initial ? 1 : 0)
+        storeData(euroParams[0].str, 'EU')
+    }
+    const fr = axios.get(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=FR`)
+    const be = axios.get(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=BE`)
+    const de = axios.get(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=DE`)
+    Promise.all([fr, be, de])
+        .then(([resFr, resBe, resDe]) => {
+            const frStr = JSON.stringify(resFr.data)
+            const beStr = JSON.stringify(resBe.data)
+            const deStr = JSON.stringify(resDe.data)
+            selectMax(frStr, beStr, deStr)
+        })
+        .catch(e => console.error(e))
+}
+
 const getData = region => {
     if (region.attempts >= maxAttempts) {
         return
     }
-    axios.get(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=${region.value}`)
-        .then(res => storeData(JSON.stringify(res.data), region.value))
-        .catch(() => {
-            region.attempts++
-            getData(region)
-        })
+    if (region.value === 'EU') {
+        getEuData()
+    } else {
+        axios.get(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=${region.value}`)
+            .then(res => storeData(JSON.stringify(res.data), region.value))
+            .catch(() => {
+                region.attempts++
+                getData(region)
+            })
+    }
 }
 
 const convertToUsd = (val, currCode) => {
@@ -71,6 +100,7 @@ const storeData = (str, code) => {
     const params = data[sub].data
     try {
         SteamGiftsPrice.create({
+            subId: sub,
             countryCode: code,
             currencyId: currencyId(params.price.currency),
             price: params.price.final,
