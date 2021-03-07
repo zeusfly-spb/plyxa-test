@@ -53,7 +53,7 @@ const getEuData = () => {
         beParams = {...beParams, str: be}
         deParams = {...deParams, str: de}
         let euroParams = [frParams, beParams, deParams]
-        euroParams.sort((a, b) => a.price.initial > b.price.initial ? -1 : a.price.initial > b.price.initial ? 1 : 0)
+        euroParams.sort((a, b) => a.price.initial > b.price.initial ? -1 : a.price.initial < b.price.initial ? 1 : 0)
         storeData(euroParams[0].str, 'EU')
     }
     const fr = axios.get(`https://store.steampowered.com/api/packagedetails?packageids=${sub}&cc=FR`)
