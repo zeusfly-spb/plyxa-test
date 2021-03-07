@@ -1,5 +1,4 @@
 const fs = require('fs')
-const fetch = require('node-fetch')
 const axios = require('axios')
 const models = require('./models')
 const SteamGiftsPrice = models.SteamGiftsPrice
